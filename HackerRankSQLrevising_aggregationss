@@ -1,0 +1,24 @@
+--Number of cities with population > 100000
+SELECT COUNT(NAME)
+FROM CITY
+WHERE POPULATION > 100000;
+
+-- TOTAL POPULATION OF CITY WITH DISTRICT CALIFORNIA
+
+SELECT SUM(POPULATION)
+FROM CITY
+WHERE DISTRICT = 'California';
+
+-- Average population for all cities in city rounded to nearest integer
+-- An integer can never be a fraction, a decimal or a per cent
+
+SELECT AVG(POPULATION)
+FROM CITY;
+
+--The blunder 
+--CEILING ( numeric_expression ) +1 because we need integers
+SELECT 
+    CEILING(AVG(SALARY)) - 
+    AVG(CEILING(CAST(REPLACE(SALARY, '0','') AS int))) + 1
+FROM EMPLOYEES;
+
