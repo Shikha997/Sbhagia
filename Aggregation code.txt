@@ -1,0 +1,101 @@
+--Number of cities with population > 100000
+SELECT COUNT(NAME)
+FROM CITY
+WHERE POPULATION > 100000;
+
+-- TOTAL POPULATION OF CITY WITH DISTRICT CALIFORNIA
+
+SELECT SUM(POPULATION)
+FROM CITY
+WHERE DISTRICT = 'California';
+
+-- Average population for all cities in city rounded to nearest integer
+-- An integer can never be a fraction, a decimal or a per cent
+
+SELECT AVG(POPULATION)
+FROM CITY;
+
+--The blunder 
+--CEILING ( numeric_expression ) +1 because we need integers
+SELECT 
+    CEILING(AVG(SALARY)) - 
+    AVG(CEILING(CAST(REPLACE(SALARY, '0','') AS int))) + 1
+FROM EMPLOYEES;
+
+--Top Earners
+SELECT TOP(1)
+        months * salary,
+        count(months * salary)
+FROM EMPLOYEE
+group by months * salary
+order by months * salary DESC
+;
+
+--aggregate average
+-- average population where district is california
+SELECT AVG(POPULATION)
+FROM CITY
+WHERE DISTRICT = 'California'
+;
+
+--WEATHER OBSERVATION STATION 2
+SELECT 
+    CONVERT(DECIMAL(10, 2), SUM(LAT_N)),
+    CONVERT(DECIMAL(10, 2), SUM(LONG_W))
+FROM STATION;
+
+--weather observation 13
+SELECT CONVERT(DECIMAL(10, 4), SUM(LAT_N))
+FROM STATION
+where LAT_N BETWEEN 38.7880 AND 137.2345;
+
+--weather observation 14
+SELECT CONVERT(DECIMAL(10, 4), MAX(LAT_N))
+FROM STATION
+WHERE LAT_N < 137.2345;
+
+--WEATHER OBSERVATION 15
+SELECT 
+    CAST(LONG_W AS DECIMAL(10,4)) 
+FROM STATION 
+WHERE 
+    LAT_N = (SELECT MAX(LAT_N) FROM STATION WHERE LAT_N<137.2345);
+
+--WEATHER OBSERVATION 16
+SELECT 
+    CAST(MIN(LAT_N) AS DECIMAL(10,4))
+FROM STATION 
+WHERE LAT_N > 38.7780;
+
+--WEATHER OBSERVATION 17
+SELECT 
+    CAST(LONG_W AS DECIMAL(10,4))
+FROM STATION 
+WHERE LAT_N = (SELECT MIN(LAT_N )FROM STATION WHERE LAT_N > 38.7780);
+
+-- WEATHER OBSERVATION 18
+SELECT 
+    CAST(ABS(MIN(LAT_N)- MAX(LAT_N)) + 
+    ABS(MIN(LONG_W) -MAX(LONG_W)) AS DECIMAL(10, 4))
+FROM STATION;
+
+--WEATHER OBSERVATION 19
+--(a = min(lat_n), b = max(lat_n)) 
+--(c = min (long_w) , d = max(long_w))
+SELECT 
+CAST(SQRT
+    (SQUARE(max(LAT_N)- min(LAT_N)) +
+    SQUARE(max(LONG_W) - min (LONG_W))) 
+     AS DECIMAL (10, 4))
+FROM STATION;
+
+--WEATHER OBSERVATION STATION 20
+SELECT
+CAST(
+(
+ (SELECT MAX(LAT_N) FROM
+   (SELECT TOP 50 PERCENT LAT_N FROM STATION ORDER BY LAT_N) AS BottomHalf)
+ +
+ (SELECT MIN(LAT_N) FROM
+   (SELECT TOP 50 PERCENT LAT_N FROM STATION ORDER BY LAT_N DESC) AS TopHalf)
+) / 2 AS DECIMAL(10, 4))
